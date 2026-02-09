@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DOT — Foundation</title>
+  <meta name="description" content="DOT foundation build: orbit selector + transitions + theme persistence." />
+  <link rel="stylesheet" href="./styles/main.css" />
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="container">
+      <div class="brand">DOT</div>
+      <nav class="nav">
+        <a href="#world">World</a>
+        <a href="#themes">Themes</a>
+        <a href="./prototypes/">Prototypes</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    <section id="world" class="panel">
+      <h1>DOT Foundation</h1>
+      <p class="sub">Orbit selector + Cut transitions + theme cards + persistence.</p>
+
+      <div class="world">
+        <button class="dot center" aria-label="Your dot"></button>
+
+        <div class="orbit" aria-label="Orbit selector">
+          <button class="dot orbit-dot" data-orbit="people" aria-label="People"></button>
+          <button class="dot orbit-dot" data-orbit="music" aria-label="Music"></button>
+          <button class="dot orbit-dot" data-orbit="play" aria-label="Play"></button>
+          <button class="dot orbit-dot" data-orbit="ai" aria-label="AI"></button>
+        </div>
+      </div>
+
+      <div class="status" aria-live="polite" id="status">Status: ready</div>
+    </section>
+
+    <section id="themes" class="panel">
+      <h2>B2 Theme Cards</h2>
+      <div class="cards" id="themeCards"></div>
+    </section>
+  </main>
+
+  <footer class="footer container">
+    <small>DOT Foundation Build Room</small>
+  </footer>
+
+  <script src="./scripts/app.js" defer></script>
+</body>
+</html>
