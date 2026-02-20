@@ -6,6 +6,12 @@
   --stroke: rgba(255, 255, 255, 0.14);
   --glow: rgba(140, 255, 220, 0.65);
   --radius: 16px;
+  --dot-size: 44px;
+  --center-dot-size: 74px;
+  --orbit-size: 240px;
+  --orbit-hover-scale: 1.15;
+  --orbit-active-scale: 1.22;
+  --orbit-focus-pull: 8px;
 }
 
 * {
@@ -123,8 +129,8 @@ a:hover {
 }
 
 .dot {
-  width: 44px;
-  height: 44px;
+  width: var(--dot-size);
+  height: var(--dot-size);
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: rgba(255, 255, 255, 0.08);
@@ -132,40 +138,137 @@ a:hover {
 }
 
 .center {
-  width: 74px;
-  height: 74px;
+  width: var(--center-dot-size);
+  height: var(--center-dot-size);
   background: rgba(140, 255, 220, 0.1);
   border-color: rgba(140, 255, 220, 0.35);
   box-shadow: 0 0 26px rgba(140, 255, 220, 0.18);
 }
 
-.orbit {
-  position: absolute;
-  width: 240px;
-  height: 240px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+/* ==========================
+   BULLETPROOF ORBIT SYSTEM
+========================== */
+
+/* World is positioning context */
+.world {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.orbit-dot {
+/* ==========================
+   BULLETPROOF ORBIT (for your HTML)
+   Uses your existing .dot styles
+========================== */
+
+.world {
+  position: relative;
+  height: 360px; /* keep your stage height */
+  display: grid;
+  place-items: center;
+}
+
+/* Orbit ring is centered */
+.orbit {
   position: absolute;
-  transform: translate(-50%, -50%);
-}
-.orbit-dot:nth-child(1) {
   left: 50%;
-  top: 0%;
+  top: 50%;
+  width: var(--orbit-size);
+  height: var(--orbit-size);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+
+  /* ring doesn't block hover/click */
+  pointer-events: none;
 }
-.orbit-dot:nth-child(2) {
+
+/* Orbit dots are positioned relative to orbit ring */
+.orbit .orbit-dot {
+  position: absolute;
+  pointer-events: auto; /* re-enable interaction */
+  cursor: pointer;
+
+  /* Center dot on its anchor point */
+  --orbit-scale: 1;
+  --focus-pull-x: 0px;
+  --focus-pull-y: 0px;
+  transform: translate(-50%, -50%) translate(var(--focus-pull-x), var(--focus-pull-y))
+    scale(var(--orbit-scale));
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    border-color 160ms ease,
+    opacity 160ms ease;
+}
+
+/* Place each dot around the ring (centered on ring edge) */
+.orbit .orbit-dot:nth-child(1) {
+  left: 50%;
+  top: 0;
+  --focus-x: 0;
+  --focus-y: 1;
+}
+
+.orbit .orbit-dot:nth-child(2) {
   left: 100%;
   top: 50%;
+  --focus-x: -1;
+  --focus-y: 0;
 }
-.orbit-dot:nth-child(3) {
+
+.orbit .orbit-dot:nth-child(3) {
   left: 50%;
   top: 100%;
+  --focus-x: 0;
+  --focus-y: -1;
 }
-.orbit-dot:nth-child(4) {
-  left: 0%;
+
+.orbit .orbit-dot:nth-child(4) {
+  left: 0;
   top: 50%;
+  --focus-x: 1;
+  --focus-y: 0;
+}
+
+/* Hover */
+.orbit .orbit-dot:hover {
+  --orbit-scale: var(--orbit-hover-scale);
+  box-shadow: 0 0 18px rgba(140, 255, 220, 0.3);
+  border-color: rgba(140, 255, 220, 0.5);
+}
+
+/* Active click pulse */
+.orbit .orbit-dot.is-active {
+  --orbit-scale: var(--orbit-active-scale);
+  box-shadow: 0 0 24px rgba(140, 255, 220, 0.45);
+  border-color: rgba(140, 255, 220, 0.6);
+  animation: orbitPulse 360ms ease;
+}
+
+.orbit.is-focused .orbit-dot {
+  opacity: 0.45;
+}
+
+.orbit .orbit-dot.is-focused {
+  --focus-pull-x: calc(var(--focus-x) * var(--orbit-focus-pull));
+  --focus-pull-y: calc(var(--focus-y) * var(--orbit-focus-pull));
+  opacity: 1;
+  box-shadow: 0 0 20px rgba(140, 255, 220, 0.38);
+  border-color: rgba(140, 255, 220, 0.55);
+}
+
+@keyframes orbitPulse {
+  0% {
+    box-shadow: 0 0 6px rgba(140, 255, 220, 0.2);
+  }
+  60% {
+    box-shadow: 0 0 26px rgba(140, 255, 220, 0.55);
+  }
+  100% {
+    box-shadow: 0 0 18px rgba(140, 255, 220, 0.32);
+  }
 }
 
 .status {
@@ -174,6 +277,16 @@ a:hover {
   padding: 10px 12px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 12px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
+.status.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .cards {
