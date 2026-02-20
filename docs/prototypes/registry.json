@@ -1,0 +1,14 @@
+[
+  {
+    "title": "People Field",
+    "slug": "people-field",
+    "description": "Placeholder for a people-centric interaction prototype.",
+    "status": "placeholder"
+  },
+  {
+    "title": "Orbit Lab",
+    "slug": "orbit-lab",
+    "description": "Stub page for experimenting with orbit interactions.",
+    "status": "stub"
+  }
+]
