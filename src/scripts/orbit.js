@@ -14,6 +14,16 @@ export function initOrbit(setStatus) {
   const ACTIVE_CLASS = "is-active";
   const WORLD_FOCUS_CLASS = "is-focused";
   const VISIBLE_CLASS = "is-visible";
+  const exitFocus = focusCenter => {
+    focusedDot = null;
+    clearFocusedOrbit(world, dots, ACTIVE_CLASS, WORLD_FOCUS_CLASS);
+    hidePanel(panel);
+    setStatus("ready");
+    hideStatus(status, VISIBLE_CLASS);
+    if (focusCenter && centerDot) {
+      centerDot.focus();
+    }
+  };
 
   dots.forEach(dot => {
     dot.addEventListener("mouseenter", () => {
@@ -48,37 +58,32 @@ export function initOrbit(setStatus) {
 
   if (centerDot) {
     centerDot.addEventListener("click", () => {
-      focusedDot = null;
-      clearFocusedOrbit(world, dots, ACTIVE_CLASS, WORLD_FOCUS_CLASS);
-      hidePanel(panel);
-      setStatus("ready");
-      hideStatus(status, VISIBLE_CLASS);
+      exitFocus(false);
     });
   }
 
   if (panelBack) {
     panelBack.addEventListener("click", () => {
-      focusedDot = null;
-      clearFocusedOrbit(world, dots, ACTIVE_CLASS, WORLD_FOCUS_CLASS);
-      hidePanel(panel);
-      setStatus("ready");
-      hideStatus(status, VISIBLE_CLASS);
-      if (centerDot) {
-        centerDot.focus();
-      }
+      exitFocus(true);
     });
   }
 
+  document.addEventListener("pointerdown", event => {
+    if (!focusedDot) {
+      return;
+    }
+    if (event.target.closest(".focused-panel")) {
+      return;
+    }
+    if (event.target.closest(".orbit-dot")) {
+      return;
+    }
+    exitFocus(true);
+  });
+
   document.addEventListener("keydown", event => {
     if (event.key === "Escape" && focusedDot) {
-      focusedDot = null;
-      clearFocusedOrbit(world, dots, ACTIVE_CLASS, WORLD_FOCUS_CLASS);
-      hidePanel(panel);
-      setStatus("ready");
-      hideStatus(status, VISIBLE_CLASS);
-      if (centerDot) {
-        centerDot.focus();
-      }
+      exitFocus(true);
     }
   });
 }
