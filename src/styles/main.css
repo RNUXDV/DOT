@@ -242,21 +242,87 @@ a:hover {
 /* Active click pulse */
 .orbit .orbit-dot.is-active {
   --orbit-scale: var(--orbit-active-scale);
+  --focus-pull-x: calc(var(--focus-x) * var(--orbit-focus-pull));
+  --focus-pull-y: calc(var(--focus-y) * var(--orbit-focus-pull));
   box-shadow: 0 0 24px rgba(140, 255, 220, 0.45);
   border-color: rgba(140, 255, 220, 0.6);
   animation: orbitPulse 360ms ease;
-}
-
-.orbit.is-focused .orbit-dot {
-  opacity: 0.45;
-}
-
-.orbit .orbit-dot.is-focused {
-  --focus-pull-x: calc(var(--focus-x) * var(--orbit-focus-pull));
-  --focus-pull-y: calc(var(--focus-y) * var(--orbit-focus-pull));
   opacity: 1;
-  box-shadow: 0 0 20px rgba(140, 255, 220, 0.38);
-  border-color: rgba(140, 255, 220, 0.55);
+}
+
+.world.is-focused .orbit-dot {
+  opacity: 0.35;
+}
+
+.world.is-focused .orbit-dot.is-active {
+  opacity: 1;
+}
+
+.focused-panel {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  transform: translate(-50%, 16px);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 200ms ease,
+    transform 200ms ease;
+  z-index: 2;
+}
+
+.world.is-focused .focused-panel {
+  opacity: 1;
+  transform: translate(-50%, 0);
+  pointer-events: auto;
+}
+
+.focused-panel__content {
+  min-width: min(360px, 82vw);
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--stroke);
+  background: rgba(11, 12, 16, 0.88);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+}
+
+.focused-panel__title {
+  margin: 0 0 6px;
+  font-size: 18px;
+}
+
+.focused-panel__desc {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.focused-panel__actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.focused-panel__action,
+.focused-panel__back {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.focused-panel__action {
+  background: rgba(140, 255, 220, 0.16);
+  border-color: rgba(140, 255, 220, 0.45);
+  color: var(--text);
+}
+
+.focused-panel__back {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: var(--text);
 }
 
 @keyframes orbitPulse {
